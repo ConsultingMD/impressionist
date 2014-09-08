@@ -34,7 +34,7 @@ module ImpressionistController
         actions = opts[:actions]
         actions.collect!{|a|a.to_s} unless actions.blank?
         if (actions.blank? || actions.include?(action_name)) && unique?(opts[:unique])
-          Impression.create(direct_create_statement)
+          Impression.create(direct_create_statement({}.merge(opts[:query_params] || {})))
         end
       end
     end

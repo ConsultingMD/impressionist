@@ -1,3 +1,3 @@
 TestApp::Application.routes.draw do
-  resources :articles, :posts, :widgets, :dummy
+  resources :articles, :posts, :widgets, :dummy, :override
 end
