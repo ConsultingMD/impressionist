@@ -10,4 +10,8 @@ class OverrideController < ActionController::Base
 
   def show
   end
+
+  def update
+    impressionist @override, nil, :controller_name => 'A::Different::String'
+  end
 end
