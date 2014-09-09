@@ -32,6 +32,37 @@ describe ArticlesController do
     Article.first.impressions.last.user_id.should eq 123
   end
 
+  context 'with custom current_user proc' do
+    include_context 'custom current_user proc'
+
+    it 'logs the correct user' do
+      get "show", :id=> 1
+      Article.first.impressions.last.user_id.should eq custom_user
+    end
+  end
+
+  context 'with custom current_user method' do
+    include_context 'custom current_user method'
+
+    it 'logs the correct user' do
+      get "show", :id=> 1
+      Article.first.impressions.last.user_id.should eq custom_user
+    end
+  end
+
+  context 'with a junk current_user method' do
+    before do
+      Impressionist.setup {|imp| imp.current_user = "I am 7"}
+    end
+    after do
+      Impressionist.setup {|imp| imp.current_user = nil}
+    end
+
+    it 'raises an argument error' do
+      expect { get "show", :id=> 1 }.to raise_error(ArgumentError)
+    end
+  end
+
   it "should not log the user_id if user is authenticated" do
     get "show", :id=> 1
     Article.first.impressions.last.user_id.should eq nil
