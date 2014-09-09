@@ -32,6 +32,15 @@ describe ArticlesController do
     Article.first.impressions.last.user_id.should eq 123
   end
 
+  context 'if the current_user method is overridden' do
+    include_context 'custom current_user method'
+
+    it 'logs the correct user' do
+      get "show", :id=> 1
+      Article.first.impressions.last.user_id.should eq custom_user
+    end
+  end
+
   it "should not log the user_id if user is authenticated" do
     get "show", :id=> 1
     Article.first.impressions.last.user_id.should eq nil
