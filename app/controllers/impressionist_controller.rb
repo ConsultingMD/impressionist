@@ -119,7 +119,8 @@ module ImpressionistController
       if callback = Impressionist.current_user
         user = case callback
           when Symbol then self.send(callback)
-          else callback.call
+          when Proc then callback.call
+          else raise ArgumentError, "Registered current_user callback #{callback} must be either symbol or proc."
           end
         user_id = user.try(:id)
       else

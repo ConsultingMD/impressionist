@@ -50,6 +50,19 @@ describe ArticlesController do
     end
   end
 
+  context 'with a junk current_user method' do
+    before do
+      Impressionist.setup {|imp| imp.current_user = "I am 7"}
+    end
+    after do
+      Impressionist.setup {|imp| imp.current_user = nil}
+    end
+
+    it 'raises an argument error' do
+      expect { get "show", :id=> 1 }.to raise_error(ArgumentError)
+    end
+  end
+
   it "should not log the user_id if user is authenticated" do
     get "show", :id=> 1
     Article.first.impressions.last.user_id.should eq nil
