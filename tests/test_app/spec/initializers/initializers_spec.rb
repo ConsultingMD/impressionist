@@ -19,10 +19,20 @@ describe Impressionist do
   end
 
   describe '#current_user=' do
-    include_context 'custom current_user method'
+    context 'with a method symbol' do
+      include_context 'custom current_user method'
 
-    it 'can be configured' do
-      expect(Impressionist.current_user).to_not be_nil
+      it 'can be configured' do
+        expect(Impressionist.current_user).to_not be_nil
+      end
+    end
+
+    context 'with a proc' do
+      include_context 'custom current_user proc'
+
+      it 'can be configured with a symbol' do
+        expect(Impressionist.current_user).to_not be_nil
+      end
     end
   end
 end

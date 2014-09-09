@@ -112,10 +112,20 @@ module ImpressionistController
       request.session_options[:id]
     end
 
-    #use both @current_user and current_user helper
+    # allow a custom current_user method to be provided; otherwise
+    # use both @current_user and current_user helper
     def user_id
-      user_id = @current_user ? @current_user.id : nil rescue nil
-      user_id = current_user ? current_user.id : nil rescue nil if user_id.blank?
+      user_id = nil
+      if callback = Impressionist.current_user
+        user = case callback
+          when Symbol then self.send(callback)
+          else callback.call
+          end
+        user_id = user.try(:id)
+      else
+        user_id = @current_user ? @current_user.id : nil rescue nil
+        user_id = current_user ? current_user.id : nil rescue nil if user_id.blank?
+      end
       user_id
     end
   end
